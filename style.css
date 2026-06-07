@@ -2,3 +2,128 @@
   margin: 0;
   padding: 0;
 }
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+body {
+    background: linear-gradient(135deg, #00c6ff, #0072ff);
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 20px;
+}
+
+.weather-container {
+    background: rgba(255, 255, 255, 0.9);
+    padding: 30px;
+    border-radius: 20px;
+    box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+    width: 100%;
+    max-width: 400px;
+    text-align: center;
+}
+
+h2 {
+    color: #333;
+    margin-bottom: 20px;
+}
+
+.search-box {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background: #ebf2fa;
+    border-radius: 30px;
+    padding: 6px 10px 6px 20px;
+    margin-bottom: 20px;
+}
+
+.search-box input {
+    border: none;
+    outline: none;
+    background: transparent;
+    width: 80%;
+    font-size: 16px;
+}
+
+.search-box button {
+    border: none;
+    outline: none;
+    background: #0072ff;
+    color: white;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    cursor: pointer;
+    transition: 0.3s;
+}
+
+.search-box button:hover {
+    background: #0056b3;
+}
+
+.error-message {
+    color: red;
+    font-size: 14px;
+    margin-bottom: 10px;
+    display: none;
+}
+
+.weather-info {
+    margin-top: 20px;
+}
+
+#location-name {
+    font-size: 24px;
+    color: #333;
+}
+
+#weather-icon {
+    width: 90px;
+    height: 90px;
+    margin: 10px 0;
+}
+
+.temp {
+    font-size: 50px;
+    font-weight: 700;
+    color: #222;
+}
+
+.condition {
+    font-size: 18px;
+    color: #666;
+    text-transform: capitalize;
+    margin-bottom: 20px;
+}
+
+.details {
+    display: flex;
+    justify-content: space-between;
+    padding: 0 10px;
+    margin-top: 20px;
+    border-top: 1px solid #ddd;
+    padding-top: 20px;
+}
+
+.col {
+    display: flex;
+    align-items: center;
+    text-align: left;
+}
+
+.col i {
+    font-size: 22px;
+    margin-right: 10px;
+    color: #0072ff;
+}
+
+.col p {
+    font-size: 14px;
+    color: #333;
+}
