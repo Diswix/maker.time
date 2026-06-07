@@ -1,45 +1,74 @@
 const http = require('http');
-const apiKey = "953f27ca082c420ab6d131814260706"; 
-const location = "Boryspil";
-const url = `https://api.weatherapi.com/v1/current.json?key=${apiKey}&q=${location}&aqi=no`;
+const fs = require('fs');
+const path = require('path');
 
-fetch(url)
-  .then((response) => {
-    if (!response.ok) {
-      throw new Error(`Weather API request failed: ${response.status}`);
+const API_KEY = '953f27ca082c420ab6d131814260706'; 
+
+const server = http.createServer((req, res) => {
+    const urlObj = new URL(req.url, `http://${req.headers.host}`);
+
+    if (urlObj.pathname === '/api/weather') {
+        const city = urlObj.searchParams.get('city') || 'Kyiv';
+        const apiUrl = `https://weatherapi.com/v1/current.json?key=${API_KEY}&q=${encodeURIComponent(city)}&lang=uk`;
+
+        http.get(apiUrl, (apiRes) => {
+            let data = '';
+            apiRes.on('data', chunk => data += chunk);
+            apiRes.on('end', () => {
+                res.writeHead(200, { 'Content-Type': 'application/json' });
+                res.end(data);
+            });
+        }).on('error', (err) => {
+            res.writeHead(500, { 'Content-Type': 'application/json' });
+            res.end(JSON.stringify({ error: err.message }));
+        });
+        return;
     }
-    return response.json();
-  })
-  .then((data) => {
-    console.log("Weather data:", data);
-    const weatherInfo = document.createElement("div");
-    weatherInfo.innerHTML = `
-      <h1>Weather for ${data.location.name}, ${data.location.country}</h1>
-      <p>Temperature: ${data.current.temp_c} °C</p>
-      <p>Condition: ${data.current.condition.text}</p>
-    `;
-    document.body.prepend(weatherInfo);
-  })
-  .catch((error) => {
-    console.error("Error fetching weather:", error);
-    const errorMessage = document.createElement("p");
-    errorMessage.textContent = "Could not load weather data. Check the API key and network connection.";
-    document.body.prepend(errorMessage);
-  });
-  const server = http.createServer((req, res) => {
-    res.writeHead(200, { 'Content-Type': 'text/html' });
-    res.end(`
-      <html>
-        <head>
-          <title>Weather App</title>
-        </head>
-        <body>
-          <h1>Weather App</h1>
-          <p>Loading weather data...</p>
-        </body>
-      </html>
-    `);
-  });
-  server.listen(3000, () => {
-    console.log('Server is running on http://localhost:3000');
-  });
+
+    let filePath = urlObj.pathname === '/' ? './index.html' : '.' + urlObj.pathname;
+    const extname = path.extname(filePath);
+    
+    let contentType = 'text/html';
+    if (extname === '.js') contentType = 'text/javascript';
+    if (extname === '.css') contentType = 'text/css';
+
+    fs.readFile(filePath, (error, content) => {
+        if (error) {
+            res.writeHead(404, { 'Content-Type': 'text/plain' });
+            res.end('Not Found');
+        } else {
+            res.writeHead(200, { 'Content-Type': contentType + '; charset=utf-8' });
+            res.end(content, 'utf-8');
+        }
+    });
+});
+
+async function checkWeather(city) {
+    const response = await fetch(`/api/weather?city=${encodeURIComponent(city)}`);
+    const data = await response.json();
+
+    const locationName = `${data.location.name}, ${data.location.country}`;
+
+    document.getElementById('location-name').innerText = locationName;
+    document.getElementById('temp-value').innerText = `${Math.round(data.current.temp_c)}°C`;
+    document.getElementById('condition-text').innerText = data.current.condition.text;
+    document.getElementById('humidity').innerText = `${data.current.humidity}%`;
+    document.getElementById('wind-speed').innerText = `${data.current.wind_kph} км/год`;
+    
+    const icon = document.getElementById('weather-icon');
+    icon.src = `https:${data.current.condition.icon}`;
+    icon.style.display = "inline-block";
+}
+
+document.getElementById('search-btn').addEventListener('click', () => {
+    const inputVal = document.getElementById('city-input').value;
+    if (inputVal.trim() !== '') {
+        checkWeather(inputVal);
+    }
+});
+
+checkWeather('Бориспіль');
+
+server.listen(3000, () => {
+    console.log(`Server running at http://localhost:3000`);
+});
