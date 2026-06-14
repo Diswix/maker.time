@@ -62,17 +62,15 @@ document.getElementById('city-input').addEventListener('keydown', (e) => {
     }
 });
 
-const weather = data.current.condition.text.toLowerCase();
+body.className = "";
 
-if (weather.includes('rain')) {
-    document.body.style.backgroundColor = 'blue';
-} else if (weather.includes('cloud')) {
-    document.body.style.backgroundColor = 'gray';
-} else if (weather.includes('clear') || weather.includes('sunny')) {
-    document.body.style.backgroundColor = 'yellow';
-} else if (weather.includes('snow')) {
-    document.body.style.backgroundColor = 'white';
+if (condition.includes("Sunny") || condition.includes("Clear")) {
+    body.classList.add("sunny");
+} else if (condition.includes("Cloud")) {
+    body.classList.add("cloudy");
+} else if (condition.includes("Rain")) {
+    body.classList.add("rainy");
 }
-    
+
 checkWeather('Boryspil');
 
