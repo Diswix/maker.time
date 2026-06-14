@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="uk">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -7,14 +8,15 @@
     <link rel="stylesheet" href="https://cloudflare.com">
     <link rel="stylesheet" href="style.css">
 </head>
+
 <body>
 
     <div class="weather-container">
         <h2><i class="fas fa-cloud-sun"></i> Maker Time Weather</h2>
-        
+
         <div class="search-box">
             <input type="text" id="city-input" placeholder="Введіть назву міста...">
-            <button id="search-btn"><i class="fas fa-search"></i></button>
+            <button id="search-btn"></button>
         </div>
 
         <div class="error-message" id="error-msg"></div>
@@ -24,7 +26,7 @@
             <img id="weather-icon" src="" alt="Weather Icon" style="display: none;">
             <div class="temp" id="temp-value">--°C</div>
             <div class="condition" id="condition-text">---</div>
-            
+
             <div class="details">
                 <div class="col">
                     <i class="fas fa-tint"></i>
@@ -44,11 +46,10 @@
         </div>
     </div>
 
-    <script
-      src="https://use.fontawesome.com/releases/v5.15.4/js/all.js"
-      integrity="sha384-rOA1PnstxnOBLzCLMcre8ybwbTmemjzdNlILg8O7z1lUkLXozs4DHonlDtnE7fpc"
-      crossorigin="anonymous"
-    ></script>
+    <script src="https://use.fontawesome.com/releases/v5.15.4/js/all.js"
+        integrity="sha384-rOA1PnstxnOBLzCLMcre8ybwbTmemjzdNlILg8O7z1lUkLXozs4DHonlDtnE7fpc"
+        crossorigin="anonymous"></script>
     <script src="script.js"></script>
-  </body>
+</body>
+
 </html>
