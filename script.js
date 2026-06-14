@@ -61,5 +61,5 @@ document.getElementById('city-input').addEventListener('keydown', (e) => {
     }
 });
 
-
+    
 checkWeather('Boryspil');
