@@ -53,12 +53,13 @@ document.getElementById('search-btn').addEventListener('click', () => {
 document.getElementById('city-input').addEventListener('keydown', (e) => {
     if (e.key === 'Enter') {
         const city = e.target.value.trim();
-        document.getElementById('city-input').reset();
 
         if (city) {
             checkWeather(city);
         }
+        e.target.value = ''; 
     }
 });
+
 
 checkWeather('Boryspil');
