@@ -7,6 +7,7 @@ async function checkWeather(city) {
         );
 
         const data = await response.json();
+        console.log(data.current.condition.text);
 
         if (data.error) {
             document.getElementById('location-name').innerText = 'API Error';
@@ -61,5 +62,17 @@ document.getElementById('city-input').addEventListener('keydown', (e) => {
     }
 });
 
+const weather = data.current.condition.text.toLowerCase();
+
+if (weather.includes('rain')) {
+    document.body.style.backgroundColor = 'blue';
+} else if (weather.includes('cloud')) {
+    document.body.style.backgroundColor = 'gray';
+} else if (weather.includes('clear') || weather.includes('sunny')) {
+    document.body.style.backgroundColor = 'yellow';
+} else if (weather.includes('snow')) {
+    document.body.style.backgroundColor = 'white';
+}
     
 checkWeather('Boryspil');
+
