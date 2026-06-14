@@ -4,9 +4,9 @@ async function checkWeather(city) {
         const data = await response.json();
 
         if (data.error) {
-            document.getElementById('location-name').innerText = "Ошибка API";
+            document.getElementById('location-name').innerText = "error API";
             document.getElementById('condition-text').innerText = data.error.message;
-            console.error("Ошибка от Weather API:", data.error.message);
+            console.error("error Weather API:", data.error.message);
             return;
         }
 
