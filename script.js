@@ -1,3 +1,7 @@
+const api = '953f27ca082c420ab6d131814260706';
+const apiUrl = `http://api.weatherapi.com/v1/current.json?key=${api}&q=Kyiv&aqi=no`;
+
+
 async function checkWeather(city) {
     try {
         const response = await fetch(`/api/weather?city=${encodeURIComponent(city)}`);
