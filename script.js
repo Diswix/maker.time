@@ -62,14 +62,25 @@ document.getElementById('city-input').addEventListener('keydown', (e) => {
     }
 });
 
-body.className = "";
+function changeBackground(condition) {
+    const body = document.body;
+    const weather = condition.toLowerCase();
 
-if (condition.includes("Sunny") || condition.includes("Clear")) {
-    body.classList.add("sunny");
-} else if (condition.includes("Cloudy")) {
-    body.classList.add("cloudy");
-} else if (condition.includes("Rain")) {
-    body.classList.add("rainy");
+    if (weather.includes("clear")) {
+        body.style.background = "linear-gradient(#fceabb, #f8b500)";
+    } 
+    else if (weather.includes("cloud")) {
+        body.style.background = "linear-gradient(#bdc3c7, #2c3e50)";
+    } 
+    else if (weather.includes("rain")) {
+        body.style.background = "linear-gradient(#4e54c8, #8f94fb)";
+    } 
+    else if (weather.includes("snow")) {
+        body.style.background = "linear-gradient(#e6dada, #274046)";
+    } 
+    else {
+        body.style.background = "#222";
+    }
 }
 
 checkWeather('Boryspil');

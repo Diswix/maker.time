@@ -129,13 +129,25 @@ h2 {
 }
 
 .sunny {
-    background: linear-gradient(to bottom, #f9d423, #ff4e50);
+    background: linear-gradient(to top, #f9d423, #ff4e50);
 }
 
 .cloudy {
-    background: linear-gradient(to bottom, #bdc3c7, #2c3e50);
+    background: linear-gradient(to top, #bdc3c7, #2c3e50);
 }
 
 .rainy {
-    background: linear-gradient(to bottom, #4b79a1, #283e51);
+    background: linear-gradient(to top, #4e54c8, #8f94fb);
+}
+
+.snowy {
+    background: linear-gradient(to top, #e0eafc, #cfdef3);
+}
+
+.thunder {
+    background: linear-gradient(to top, #232526, #414345);
+}
+
+.default {
+    background: #607d8b;
 }
