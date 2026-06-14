@@ -66,7 +66,7 @@ body.className = "";
 
 if (condition.includes("Sunny") || condition.includes("Clear")) {
     body.classList.add("sunny");
-} else if (condition.includes("Cloud")) {
+} else if (condition.includes("Cloudy")) {
     body.classList.add("cloudy");
 } else if (condition.includes("Rain")) {
     body.classList.add("rainy");
