@@ -1,12 +1,16 @@
+
 const apiKey = '953f27ca082c420ab6d131814260706';
+
 let city = document.getElementById('city-input').value.trim() || 'Boryspil';
-let globalForecastData = null;
-let globalLocationText = '';
+
+let forecastData = [];
+let locationName = '';
 
 async function checkWeather() {
     try {
+
         const response = await fetch(
-            `https://weatherapi.com{apiKey}&q=${city}&days=7&aqi=no`
+            `https://api.weatherapi.com/v1/forecast.json?key=${apiKey}&q=${city}&days=7&aqi=no&alerts=no`
         );
 
         const data = await response.json();
@@ -17,101 +21,137 @@ async function checkWeather() {
             return;
         }
 
-        globalForecastData = data.forecast.forecastday;
-        globalLocationText = `${data.location.name}, ${data.location.country}`;
+        forecastData = data.forecast.forecastday;
+        locationName = `${data.location.name}, ${data.location.country}`;
 
-        createForecastButtons(globalForecastData);
-        showDayData(0);
+        createForecastButtons();
+        showDay(0);
 
     } catch (error) {
+
         console.error('Weather request failed:', error);
 
         document.getElementById('location-name').innerText = 'Connection Error';
-        document.getElementById('condition-text').innerText = 'Unable to fetch weather data';
-        document.getElementById('weather-icon').style.display = 'none';
-        document.getElementById('temp-value').innerText = '--°C';
-        document.getElementById('humidity').innerText = '--%';
-        document.getElementById('wind-speed').innerText = '-- km/h';
-        document.getElementById('forecast-bar').innerHTML = '';
+        document.getElementById('condition-text').innerText =
+            'Unable to fetch weather data';
     }
 }
 
-function createForecastButtons(forecastDays) {
+function createForecastButtons() {
+
     const bar = document.getElementById('forecast-bar');
+
+    if (!bar) return;
+
     bar.innerHTML = '';
 
-    forecastDays.forEach((day, index) => {
-        const btn = document.createElement('button');
-        btn.classList.add('day-btn');
-        if (index === 0) btn.classList.add('active');
+    forecastData.forEach((day, index) => {
 
-        const dateObj = new Date(day.date);
-        const dayName = index === 0 ? 'Сьогодні' : dateObj.toLocaleDateString('uk-UA', { weekday: 'short' });
+        const button = document.createElement('button');
 
-        btn.innerText = dayName;
-        btn.addEventListener('click', (e) => {
-            document.querySelectorAll('.day-btn').forEach(b => b.classList.remove('active'));
-            e.target.classList.add('active');
-            showDayData(index);
+        button.classList.add('day-btn');
+
+        if (index === 0) {
+            button.innerText = 'Today';
+            button.classList.add('active');
+        } else {
+            button.innerText = `+${index} Day`;
+        }
+
+        button.addEventListener('click', () => {
+
+            document.querySelectorAll('.day-btn').forEach(btn => {
+                btn.classList.remove('active');
+            });
+
+            button.classList.add('active');
+
+            showDay(index);
         });
 
-        bar.appendChild(btn);
+        bar.appendChild(button);
     });
 }
 
-function showDayData(index) {
-    if (!globalForecastData || !globalForecastData[index]) return;
+function showDay(index) {
 
-    const targetDay = globalForecastData[index];
-    document.getElementById('location-name').innerText = globalLocationText;
+    const day = forecastData[index];
 
-    document.getElementById('temp-value').innerText = `${Math.round(targetDay.day.avgtemp_c)}°C`;
-    document.getElementById('condition-text').innerText = targetDay.day.condition.text;
-    document.getElementById('humidity').innerText = `${targetDay.day.avghumidity}%`;
-    document.getElementById('wind-speed').innerText = `${targetDay.day.maxwind_kph} km/h`;
+    document.getElementById('location-name').innerText = locationName;
+
+    document.getElementById('temp-value').innerText =
+        `${Math.round(day.day.avgtemp_c)}°C`;
+
+    document.getElementById('condition-text').innerText =
+        day.day.condition.text;
+
+    document.getElementById('humidity').innerText =
+        `${day.day.avghumidity}%`;
+
+    document.getElementById('wind-speed').innerText =
+        `${day.day.maxwind_kph} km/h`;
 
     const icon = document.getElementById('weather-icon');
-    icon.src = `https:${targetDay.day.condition.icon}`;
+
+    icon.src = `https:${day.day.condition.icon}`;
     icon.style.display = 'inline-block';
 
-    changeBackground(targetDay.day.condition.text);
+    changeBackground(day.day.condition.text);
 }
 
 document.getElementById('search-btn').addEventListener('click', () => {
+
     const inputVal = document.getElementById('city-input').value.trim();
+
     if (inputVal) {
-        city = inputVal; 
+        city = inputVal;
         checkWeather();
     }
 });
 
 document.getElementById('city-input').addEventListener('keydown', (e) => {
+
     if (e.key === 'Enter') {
+
         const inputVal = e.target.value.trim();
+
         if (inputVal) {
-            city = inputVal; 
+            city = inputVal;
             checkWeather();
         }
-        e.target.value = ''; 
+
+        e.target.value = '';
     }
 });
 
 function changeBackground(condition) {
+
     const body = document.body;
     const weather = condition.toLowerCase().trim();
 
-    body.className = ""; 
+    body.className = "";
 
     if (weather.includes("sunny") || weather.includes("clear")) {
         body.classList.add("sunny");
-    } 
-    else if (weather.includes("cloud") || weather.includes("overcast") || weather.includes("mist")) {
+    }
+    else if (
+        weather.includes("cloud") ||
+        weather.includes("overcast") ||
+        weather.includes("mist")
+    ) {
         body.classList.add("cloudy");
-    } 
-    else if (weather.includes("rain") || weather.includes("drizzle") || weather.includes("patchy rain")) {
+    }
+    else if (
+        weather.includes("rain") ||
+        weather.includes("drizzle") ||
+        weather.includes("patchy rain")
+    ) {
         body.classList.add("rainy");
-    } 
-    else if (weather.includes("snow") || weather.includes("blizzard")) {
+    }
+    else if (
+        weather.includes("snow") ||
+        weather.includes("blizzard")
+    ) {
         body.classList.add("snowy");
     }
 }

@@ -4,51 +4,110 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Maker Time - Погода</title>
-    <link rel="stylesheet" href="https://cloudflare.com">
+    <title>Maker Time - Weather</title>
+
+    
     <link rel="stylesheet" href="style.css">
 </head>
 
 <body>
 
     <div class="weather-container">
-        <h2><i class="fas fa-cloud-sun"></i> Maker Time Weather</h2>
+
+        <h2>🌤 Maker Time Weather</h2>
 
         <div class="search-box">
             <input type="text" id="city-input" placeholder="Введіть назву міста...">
-            <button id="search-btn"><i class="fas fa-search"></i></button>
+
+            <button id="search-btn">
+                🔍
+            </button>
         </div>
 
         <div class="error-message" id="error-msg"></div>
 
-        <div id="forecast-bar" class="forecast-bar"></div>
+        <div class="forecast-section">
 
+            <h3 class="forecast-title">
+                7 Day Forecast
+            </h3>
+
+            <div id="forecast-bar" class="forecast-bar"></div>
+
+        </div>
+
+        <!-- MAIN WEATHER CARD -->
         <div class="weather-info" id="weather-info">
+
             <h3 id="location-name">---</h3>
-            <img id="weather-icon" src="" alt="Weather Icon" style="display: none;">
-            <div class="temp" id="temp-value">--°C</div>
-            <div class="condition" id="condition-text">---</div>
+
+            <img id="weather-icon" src="" alt="Weather Icon" style="display:none;">
+
+            <div class="temp" id="temp-value">
+                --°C
+            </div>
+
+            <div class="condition" id="condition-text">
+                ---
+            </div>
 
             <div class="details">
+
                 <div class="col">
-                    <i class="fas fa-tint"></i>
                     <div>
                         <p id="humidity">--%</p>
                         <p>Вологість</p>
                     </div>
                 </div>
+
                 <div class="col">
-                    <i class="fas fa-wind"></i>
                     <div>
                         <p id="wind-speed">-- км/год</p>
                         <p>Вітер</p>
                     </div>
                 </div>
+
             </div>
+
         </div>
+
     </div>
 
+<img id="pic" src="https://i.pinimg.com/736x/80/ec/32/80ec32b48dbc81d740fa12f68741a074.jpg">
+
+<style>
+#pic {
+  width: 100px; 
+}
+</style>
+
+<script>
+const img = document.getElementById("pic");
+
+img.onclick = () => {
+  img.style.transition = "all 0.4s";
+
+  img.style.transform = "rotate(720deg) scale(1.5)";
+  img.style.opacity = "0.2";
+  img.style.filter = "hue-rotate(300deg) contrast(3) blur(2px)";
+
+  setTimeout(() => {
+    img.style.position = "absolute";
+    img.style.left = Math.random() * window.innerWidth + "px";
+    img.style.top = Math.random() * window.innerHeight + "px";
+
+    img.style.transform = "rotate(0deg) scale(1)";
+    img.style.opacity = "1";
+    img.style.filter = "none";
+  }, 400);
+};
+</script>
+
+    <script src="https://use.fontawesome.com/releases/v5.15.4/js/all.js"
+        integrity="sha384-rOA1PnstxnOBLzCLMcre8ybwbTmemjzdNlILg8O7z1lUkLXozs4DHonlDtnE7fpc"
+        crossorigin="anonymous"></script>
     <script src="script.js"></script>
+
 </body>
 
 </html>
