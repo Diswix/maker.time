@@ -1,13 +1,15 @@
 const apiKey = '953f27ca082c420ab6d131814260706';
 let city = document.getElementById('city-input').value.trim() || 'Boryspil';
-async function checkWeather(city) {
+let globalForecastData = null;
+let globalLocationText = '';
+
+async function checkWeather() {
     try {
         const response = await fetch(
-            `http://api.weatherapi.com/v1/current.json?key=${apiKey}&q=${city}&aqi=no`
+            `https://weatherapi.com{apiKey}&q=${city}&days=7&aqi=no`
         );
 
         const data = await response.json();
-        console.log(data.current.condition.text);
 
         if (data.error) {
             document.getElementById('location-name').innerText = 'API Error';
@@ -15,48 +17,80 @@ async function checkWeather(city) {
             return;
         }
 
-        document.getElementById('location-name').innerText =
-            `${data.location.name}, ${data.location.country}`;
+        globalForecastData = data.forecast.forecastday;
+        globalLocationText = `${data.location.name}, ${data.location.country}`;
 
-        document.getElementById('temp-value').innerText =
-            `${Math.round(data.current.temp_c)}°C`;
-
-        document.getElementById('condition-text').innerText =
-            data.current.condition.text;
-
-        document.getElementById('humidity').innerText =
-            `${data.current.humidity}%`;
-
-        document.getElementById('wind-speed').innerText =
-            `${data.current.wind_kph} km/h`;
-
-        const icon = document.getElementById('weather-icon');
-        icon.src = `https:${data.current.condition.icon}`;
-        icon.style.display = 'inline-block';
+        createForecastButtons(globalForecastData);
+        showDayData(0);
 
     } catch (error) {
         console.error('Weather request failed:', error);
 
         document.getElementById('location-name').innerText = 'Connection Error';
-        document.getElementById('condition-text').innerText =
-            'Unable to fetch weather data';
+        document.getElementById('condition-text').innerText = 'Unable to fetch weather data';
+        document.getElementById('weather-icon').style.display = 'none';
+        document.getElementById('temp-value').innerText = '--°C';
+        document.getElementById('humidity').innerText = '--%';
+        document.getElementById('wind-speed').innerText = '-- km/h';
+        document.getElementById('forecast-bar').innerHTML = '';
     }
 }
 
-document.getElementById('search-btn').addEventListener('click', () => {
-    const city = document.getElementById('city-input').value.trim();
+function createForecastButtons(forecastDays) {
+    const bar = document.getElementById('forecast-bar');
+    bar.innerHTML = '';
 
-    if (city) {
-        checkWeather(city);
+    forecastDays.forEach((day, index) => {
+        const btn = document.createElement('button');
+        btn.classList.add('day-btn');
+        if (index === 0) btn.classList.add('active');
+
+        const dateObj = new Date(day.date);
+        const dayName = index === 0 ? 'Сьогодні' : dateObj.toLocaleDateString('uk-UA', { weekday: 'short' });
+
+        btn.innerText = dayName;
+        btn.addEventListener('click', (e) => {
+            document.querySelectorAll('.day-btn').forEach(b => b.classList.remove('active'));
+            e.target.classList.add('active');
+            showDayData(index);
+        });
+
+        bar.appendChild(btn);
+    });
+}
+
+function showDayData(index) {
+    if (!globalForecastData || !globalForecastData[index]) return;
+
+    const targetDay = globalForecastData[index];
+    document.getElementById('location-name').innerText = globalLocationText;
+
+    document.getElementById('temp-value').innerText = `${Math.round(targetDay.day.avgtemp_c)}°C`;
+    document.getElementById('condition-text').innerText = targetDay.day.condition.text;
+    document.getElementById('humidity').innerText = `${targetDay.day.avghumidity}%`;
+    document.getElementById('wind-speed').innerText = `${targetDay.day.maxwind_kph} km/h`;
+
+    const icon = document.getElementById('weather-icon');
+    icon.src = `https:${targetDay.day.condition.icon}`;
+    icon.style.display = 'inline-block';
+
+    changeBackground(targetDay.day.condition.text);
+}
+
+document.getElementById('search-btn').addEventListener('click', () => {
+    const inputVal = document.getElementById('city-input').value.trim();
+    if (inputVal) {
+        city = inputVal; 
+        checkWeather();
     }
 });
 
 document.getElementById('city-input').addEventListener('keydown', (e) => {
     if (e.key === 'Enter') {
-        const city = e.target.value.trim();
-
-        if (city) {
-            checkWeather(city);
+        const inputVal = e.target.value.trim();
+        if (inputVal) {
+            city = inputVal; 
+            checkWeather();
         }
         e.target.value = ''; 
     }
@@ -64,24 +98,22 @@ document.getElementById('city-input').addEventListener('keydown', (e) => {
 
 function changeBackground(condition) {
     const body = document.body;
-    const weather = condition.toLowerCase();
+    const weather = condition.toLowerCase().trim();
 
-    if (weather.includes("clear")) {
-        body.style.background = "linear-gradient(#fceabb, #f8b500)";
+    body.className = ""; 
+
+    if (weather.includes("sunny") || weather.includes("clear")) {
+        body.classList.add("sunny");
     } 
-    else if (weather.includes("cloud")) {
-        body.style.background = "linear-gradient(#bdc3c7, #2c3e50)";
+    else if (weather.includes("cloud") || weather.includes("overcast") || weather.includes("mist")) {
+        body.classList.add("cloudy");
     } 
-    else if (weather.includes("rain")) {
-        body.style.background = "linear-gradient(#4e54c8, #8f94fb)";
+    else if (weather.includes("rain") || weather.includes("drizzle") || weather.includes("patchy rain")) {
+        body.classList.add("rainy");
     } 
-    else if (weather.includes("snow")) {
-        body.style.background = "linear-gradient(#e6dada, #274046)";
-    } 
-    else {
-        body.style.background = "#222";
+    else if (weather.includes("snow") || weather.includes("blizzard")) {
+        body.classList.add("snowy");
     }
 }
 
-checkWeather('Boryspil');
-
+checkWeather();

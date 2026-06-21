@@ -1,8 +1,4 @@
 * {
-  margin: 0;
-  padding: 0;
-}
-* {
     margin: 0;
     padding: 0;
     box-sizing: border-box;
@@ -16,6 +12,28 @@ body {
     justify-content: center;
     align-items: center;
     padding: 20px;
+    background-attachment: fixed;
+    transition: background 0.5s ease-in-out;
+}
+
+body.sunny {
+    background: linear-gradient(135deg, #ff9900, #ff5e62) !important;
+}
+
+body.cloudy {
+    background: linear-gradient(135deg, #617ca3, #2c3e50) !important;
+}
+
+body.rainy {
+    background: linear-gradient(135deg, #3a6073, #3a7bd5) !important;
+}
+
+body.snowy {
+    background: linear-gradient(135deg, #e6dada, #274046) !important;
+}
+
+body.stormy {
+    background: linear-gradient(135deg, #373b44, #4286f4) !important;
 }
 
 .weather-container {
@@ -75,7 +93,7 @@ h2 {
 }
 
 .weather-info {
-    margin-top: 20px;
+    margin-top: 10px;
 }
 
 #location-name {
@@ -128,26 +146,40 @@ h2 {
     color: #333;
 }
 
-.sunny {
-    background: linear-gradient(to top, #f9d423, #ff4e50);
+.forecast-bar {
+    display: flex;
+    gap: 8px;
+    overflow-x: auto;
+    padding: 5px 0 15px 0;
+    margin-bottom: 10px;
+    scrollbar-width: none;
 }
 
-.cloudy {
-    background: linear-gradient(to top, #bdc3c7, #2c3e50);
+.forecast-bar::-webkit-scrollbar {
+    display: none;
 }
 
-.rainy {
-    background: linear-gradient(to top, #4e54c8, #8f94fb);
+.day-btn {
+    border: none;
+    outline: none;
+    background: #ebf2fa;
+    color: #555;
+    padding: 8px 12px;
+    border-radius: 15px;
+    cursor: pointer;
+    font-size: 12px;
+    font-weight: 600;
+    flex-shrink: 0;
+    transition: 0.3s;
+    text-align: center;
+    min-width: 60px;
 }
 
-.snowy {
-    background: linear-gradient(to top, #e0eafc, #cfdef3);
+.day-btn:hover {
+    background: #e0e8f5;
 }
 
-.thunder {
-    background: linear-gradient(to top, #232526, #414345);
-}
-
-.default {
-    background: #607d8b;
+.day-btn.active {
+    background: #0072ff;
+    color: white;
 }
